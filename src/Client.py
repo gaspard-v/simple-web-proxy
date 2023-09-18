@@ -3,7 +3,7 @@ import requests
 
 
 def __transform_query(
-    parameters: dict = None, headers: dict = None, cookies: dict = None
+    parameters: dict = {}, headers: dict = {}, cookies: dict = {}
 ) -> None:
     if parameters:
         parameters.pop("web_proxy_requested_website", None)
@@ -29,16 +29,9 @@ def __transform_response(headers: dict = None) -> None:
     headers.clear()
     headers.update(r_headers)
 
-    # headers.pop("Connection", None)
-    # headers.pop("Transfer-Encoding", None)
-    # headers.pop("Content-Length", None)
-    # headers.pop("Server", None)
-    # headers.pop("Date", None)
-    # headers.pop("Strict-Transport-Security", None)
-
 
 def __handler_html_css(html_css_file: bytes):
-    pass
+    return html_css_file
 
 
 def __handler_stream(response: requests.Response, headers: dict):
@@ -49,22 +42,11 @@ def __handler_stream(response: requests.Response, headers: dict):
         if "text/html" in headers.get("Content-Type", None):
             html_css_file += chunk
             continue
-        yield chunk  # TODO: check if the file is HTML or CSS, if not, send without verification
-    return __handler_html_css(html_css_file)
+        yield chunk
+    yield __handler_html_css(html_css_file)
 
 
-def __get() -> Response:
-    params = request.args.to_dict(True)
-    cookies = request.cookies.to_dict(True)
-    headers = dict(request.headers)
-    __transform_query(parameters=params, headers=headers, cookies=cookies)
-    response = requests.get(
-        url=f"{__website}{request.path}",
-        params=params,
-        cookies=cookies,
-        headers=headers,
-        stream=True,
-    )
+def __handle_response(response: requests.Response) -> Response:
     r_headers = dict(response.headers)
     __transform_response(headers=r_headers)
     r_status = response.status_code
@@ -78,6 +60,19 @@ def __get() -> Response:
 def simple_request(website):
     global __website
     __website = website
-    method_assoc = {"GET": __get}
+    method_assoc = {"GET": requests.get, "POST": requests.post}
+    parameters = request.args.to_dict(True)
+    cookies = request.cookies.to_dict(True)
+    headers = dict(request.headers)
+    __transform_query(parameters=parameters, headers=headers, cookies=cookies)
+    if not method_assoc.get(request.method, None):
+        return Response(status=405)
     method_function = method_assoc[request.method]
-    return method_function()
+    response = method_function(
+        url=f"{__website}{request.path}",
+        params=parameters,
+        cookies=cookies,
+        headers=headers,
+        data=request.stream,
+    )
+    return __handle_response(response)
