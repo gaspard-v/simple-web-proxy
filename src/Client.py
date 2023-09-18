@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, escape
 import requests
 
 
@@ -60,7 +60,15 @@ def __handle_response(response: requests.Response) -> Response:
 def simple_request(website):
     global __website
     __website = website
-    method_assoc = {"GET": requests.get, "POST": requests.post}
+    method_assoc = {
+        "GET": requests.get,
+        "POST": requests.post,
+        "HEAD": requests.head,
+        "PUT": requests.put,
+        "PATCH": requests.patch,
+        "DELETE": requests.delete,
+        "OPTIONS": requests.options,
+    }
     parameters = request.args.to_dict(True)
     cookies = request.cookies.to_dict(True)
     headers = dict(request.headers)
@@ -68,11 +76,15 @@ def simple_request(website):
     if not method_assoc.get(request.method, None):
         return Response(status=405)
     method_function = method_assoc[request.method]
-    response = method_function(
-        url=f"{__website}{request.path}",
-        params=parameters,
-        cookies=cookies,
-        headers=headers,
-        data=request.stream,
-    )
+    try:
+        response = method_function(
+            url=f"{__website}{request.path}",
+            params=parameters,
+            cookies=cookies,
+            headers=headers,
+            data=request.get_data(),  # TODO check why only get_data() works
+        )
+    except Exception as err:
+        response = f"<p>{escape(err)}</p>"  # TODO use templates
+        return Response(response=response, status=500)
     return __handle_response(response)
