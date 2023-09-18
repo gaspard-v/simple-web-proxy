@@ -37,11 +37,20 @@ def __transform_response(headers: dict = None) -> None:
     # headers.pop("Strict-Transport-Security", None)
 
 
-def __handler_stream(response: requests.Response):
+def __handler_html_css(html_css_file: bytes):
+    pass
+
+
+def __handler_stream(response: requests.Response, headers: dict):
+    html_css_file = b""
     for chunk in response.iter_content(chunk_size=8192):
         if not chunk:
             continue
+        if "text/html" in headers.get("Content-Type", None):
+            html_css_file += chunk
+            continue
         yield chunk  # TODO: check if the file is HTML or CSS, if not, send without verification
+    return __handler_html_css(html_css_file)
 
 
 def __get() -> Response:
@@ -60,7 +69,9 @@ def __get() -> Response:
     __transform_response(headers=r_headers)
     r_status = response.status_code
     return Response(
-        response=__handler_stream(response), status=r_status, headers=r_headers
+        response=__handler_stream(response, r_headers),
+        status=r_status,
+        headers=r_headers,
     )
 
 
