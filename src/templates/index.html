@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vérification d'URL</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        #url-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+
+        #validate-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>Vérification d'URL</h1>
+        <form id="url-form">
+            <input type="url" id="url-input" name="url" placeholder="URL" required>
+            <button type="submit" id="validate-button">Valider</button>
+        </form>
+        <p id="validation-message"></p>
+    </div>
+
+    <script>
+        const urlForm = document.getElementById('url-form');
+        const validationMessage = document.getElementById('validation-message');
+
+        urlForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Empêcher la soumission du formulaire
+
+            const urlInput = document.getElementById('url-input');
+            const urlValue = urlInput.value;
+
+            // Vérifier si l'URL est valide
+
+            // Créer un cookie
+            document.cookie = `web_proxy_requested_website=${(urlValue)}; path=/`;
+
+            // Recharger la page
+            location.reload();
+
+        });
+    </script>
+</body>
+
+</html>

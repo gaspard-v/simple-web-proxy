@@ -1,5 +1,6 @@
-from flask import request
+from flask import request, render_template
 import requests
+from . import Client
 
 
 def main(path: str) -> str:
@@ -7,18 +8,17 @@ def main(path: str) -> str:
     parameters = request.args
     cookies = request.cookies
     requested_website = ""
+    body = request.get_data()
     requested_website_param = parameters.get("web_proxy_requested_website")
     requested_website_cookie = cookies.get("web_proxy_requested_website")
 
     if requested_website_param:
         requested_website = requested_website_param
-        parameters.pop("web_proxy_requested_website")
     elif requested_website_cookie:
         requested_website = requested_website_cookie
-        cookies.pop("web_proxy_requested_website")
     else:
-        return "TODO: faire la fonction par default"
-    return "non"
+        return render_template("index.html")
+    return Client.simple_request(requested_website)
 
 
 # from flask import Flask, render_template, Response

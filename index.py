@@ -1,7 +1,7 @@
 from flask import Flask, request
 from src import App
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="src/templates")
 
 
 @app.route("/", defaults={"path": ""})
