@@ -10,6 +10,7 @@ def __transform_query(
     if headers:
         headers.pop("Host", None)
         headers["Referrer"] = __website
+        headers.pop("Accept-Encoding", None)
     if cookies:
         cookies.pop("web_proxy_requested_website", None)
 
@@ -36,6 +37,13 @@ def __transform_response(headers: dict = None) -> None:
     # headers.pop("Strict-Transport-Security", None)
 
 
+def __handler_stream(response: requests.Response):
+    for chunk in response.iter_content(chunk_size=8192):
+        if not chunk:
+            continue
+        yield chunk  # TODO: check if the file is HTML or CSS, if not, send without verification
+
+
 def __get() -> Response:
     params = request.args.to_dict(True)
     cookies = request.cookies.to_dict(True)
@@ -46,12 +54,14 @@ def __get() -> Response:
         params=params,
         cookies=cookies,
         headers=headers,
+        stream=True,
     )
     r_headers = dict(response.headers)
     __transform_response(headers=r_headers)
     r_status = response.status_code
-    r_content = response.content  # check if the content is gziped or not
-    return Response(response=r_content, status=r_status, headers=r_headers)
+    return Response(
+        response=__handler_stream(response), status=r_status, headers=r_headers
+    )
 
 
 def simple_request(website):
