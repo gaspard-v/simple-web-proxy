@@ -17,7 +17,7 @@ def __transform_query(
 
 
 def __transform_response(headers: dict = None) -> None:
-    keys = ["Content-Type", "Set-Cookie"]
+    keys = ["Content-Type"]
     header_normalized = {key.lower(): value for key, value in headers.items()}
     keys_normalized = [key.lower() for key in keys]
     r_headers = {}
@@ -44,7 +44,8 @@ def __handler_stream(response: requests.Response, headers: dict):
             html_css_file += chunk
             continue
         yield chunk
-    yield __handler_html_css(html_css_file)
+    if html_css_file:
+        yield __handler_html_css(html_css_file)
 
 
 def __handle_response(response: requests.Response) -> Response:
@@ -84,6 +85,7 @@ def simple_request(website):
             cookies=cookies,
             headers=headers,
             data=request.get_data(),  # TODO check why only get_data() works
+            verify=False,
         )
     except Exception as err:
         response = f"<p>{escape(err)}</p>"  # TODO use templates

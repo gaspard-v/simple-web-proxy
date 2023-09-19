@@ -1,13 +1,11 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
-import html5lib
+import os
 
 
 def __find_all_absolute_link(soup: BeautifulSoup):
     elements = soup.find_all(True, href=True)
     elements += soup.find_all(True, src=True)
-    # elements += soup.find_all(True, data-src=true)
-    # elements += soup.find(["script", "meta", "img"], src=True)
     return elements
 
 
@@ -53,10 +51,22 @@ def __change_links(elements):
         element[method] = new_link
 
 
+def __add_js(soup: BeautifulSoup):
+    script_changes = soup.new_tag("script")
+    script_cookie = soup.new_tag("script")
+    with open(os.path.join(os.path.dirname(__file__), "js", "detect_changes.js")) as js:
+        script_changes.string = js.read()
+    with open(os.path.join(os.path.dirname(__file__), "js", "change_cookie.js")) as js:
+        script_cookie.string = js.read()
+    soup.head.append(script_changes)
+    soup.head.append(script_cookie)
+
+
 def parse(website: str, html: str):
     global __website
     __website = website
     soup = BeautifulSoup(html, "html5lib")
     elements = __find_all_absolute_link(soup)
     __change_links(elements)
+    __add_js(soup)
     return soup.prettify()
