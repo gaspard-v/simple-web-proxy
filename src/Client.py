@@ -1,4 +1,5 @@
 from flask import Response, request, escape
+from . import HTMLFile
 import requests
 
 
@@ -31,7 +32,7 @@ def __transform_response(headers: dict = None) -> None:
 
 
 def __handler_html_css(html_css_file: bytes):
-    return html_css_file
+    return HTMLFile.parse(__website, html_css_file)
 
 
 def __handler_stream(response: requests.Response, headers: dict):
