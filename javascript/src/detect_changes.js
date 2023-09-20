@@ -11,8 +11,10 @@ const mutationChild = (mutation) => {
 
 // fix infinite loop
 const mutationAttribute = (mutation) => {
-    console.log(mutation);
     const target = mutation.target;
+    if (!target.href && !target.src) return;
+    console.log(target.href);
+    return;
     if (mutation.attributeName === "src") {
         target.src = "/lol";
         console.log(target);
@@ -25,8 +27,12 @@ const mutationAttribute = (mutation) => {
 
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-        if (mutation.type === "childList") mutationChild(mutation);
-        else if (mutation.type === "attributes") mutationAttribute(mutation);
+        switch (mutation.type) {
+            case "childList":
+                return mutationChild(mutation);
+            case "attributes":
+                return mutationAttribute(mutation);
+        }
     });
 });
 
