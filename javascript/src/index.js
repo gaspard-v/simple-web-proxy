@@ -1,3 +1,6 @@
-import "core-js";
+async function main() {
+    console.log("bonjour");
+    return 0;
+}
 
-console.log("lol");
+main().then((result) => console.log(result));
