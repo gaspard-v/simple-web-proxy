@@ -9,8 +9,8 @@ const mutationChild = (mutation) => {
     });
 };
 
-// fix infinite loop
-const mutationAttribute = (mutation) => {
+// TODO: fix infinite loop
+const mutationAttributes = (mutation) => {
     const target = mutation.target;
     if (!target.href && !target.src) return;
     console.log(target.href);
@@ -31,7 +31,7 @@ const observer = new MutationObserver((mutations) => {
             case "childList":
                 return mutationChild(mutation);
             case "attributes":
-                return mutationAttribute(mutation);
+                return mutationAttributes(mutation);
         }
     });
 });
