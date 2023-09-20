@@ -1,3 +1,4 @@
+import change_link from "./change_link";
 const mutationChild = (mutation) => {
     mutation.addedNodes.forEach((addedNode) => {
         if (typeof addedNode.hasAttribute !== "function") return;
@@ -13,7 +14,7 @@ const mutationChild = (mutation) => {
 const mutationAttributes = (mutation) => {
     const target = mutation.target;
     if (!target.href && !target.src) return;
-    console.log(target.href);
+    console.log(change_link("https://www.google.com"));
     return;
     if (mutation.attributeName === "src") {
         target.src = "/lol";
