@@ -1,5 +1,8 @@
 from flask import Flask
+from dotenv import load_dotenv
 from src import App
+
+load_dotenv()
 
 app = Flask(__name__, template_folder="src/templates")
 

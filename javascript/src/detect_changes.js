@@ -2,27 +2,24 @@ import change_link from "./change_link";
 const mutationChild = (mutation) => {
     mutation.addedNodes.forEach((addedNode) => {
         if (typeof addedNode.hasAttribute !== "function") return;
-        if (!addedNode.hasAttribute("src") && !addedNode.hasAttribute("href"))
-            return;
-        if (addedNode.hasAttribute("src")) addedNode.src = "/lol";
-        if (addedNode.hasAttribute("href")) addedNode.href = "/lol";
+        if (addedNode.hasAttribute("src") && addedNode.src) {
+            if (addedNode.src != change_link(addedNode.src))
+                addedNode.src = change_link(addedNode.src);
+        } else if (addedNode.hasAttribute("href") && addedNode.href) {
+            if (addedNode.href != change_link(addedNode.href))
+                addedNode.href = change_link(addedNode.href);
+        }
         console.log(addedNode);
     });
 };
 
-// TODO: fix infinite loop
 const mutationAttributes = (mutation) => {
     const target = mutation.target;
-    if (!target.href && !target.src) return;
-    console.log(change_link("https://www.google.com"));
-    return;
-    if (mutation.attributeName === "src") {
-        target.src = "/lol";
-        console.log(target);
-    }
-    if (mutation.attributeName === "href") {
-        target.href = "/lol";
-        console.log(target);
+    if (target.href != change_link(target.href)) {
+        target.href = change_link(target.href);
+    } else if (target.src) {
+        if (target.src != change_link(target.src))
+            target.src = change_link(target.src);
     }
 };
 

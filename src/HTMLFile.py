@@ -10,8 +10,11 @@ def __find_all_absolute_link(soup: BeautifulSoup):
 
 
 def __parse_link(link):
-    server_netloc = ""
-    server_schema = ""
+    server_port = os.environ.get("WEB_PROXY_PORT")
+    server_netloc = os.environ.get("WEB_PROXY_NETLOC")
+    if server_port:
+        server_netloc += f":{server_port}"
+    server_schema = os.environ.get("WEB_PROXY_SCHEMA")
     parsed_link = urlparse(link)
     if parsed_link.scheme and parsed_link.netloc:
         netloc = parsed_link.netloc
