@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Test page !</title>
-    </head>
-    <body>
-        <p>This is an absolute <a href="https://www.google.com/search?q=recherche">link</a></p>
-        <p>This is a relative <a href="/nothing">link</a></p>
-    </body>
+
+<head>
+    <title>Test page !</title>
+</head>
+
+<body>
+    <p>This is an absolute <a id="absolute-link" href="https://www.google.com/search?q=recherche">link</a></p>
+    <p>This is a relative <a id="relative-link" href="/nothing">link</a></p>
+</body>
+<script>
+    var relativeLink = document.getElementById("relative-link");
+    relativeLink.href = "nouvelle-valeur-de-lien";
+</script>
+
 </html>

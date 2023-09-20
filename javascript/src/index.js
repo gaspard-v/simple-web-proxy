@@ -1,6 +1,7 @@
-async function main() {
-    console.log("bonjour");
-    return 0;
-}
+import observer from "./detect_changes";
 
-main().then((result) => console.log(result));
+observer.observe(document, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+});
