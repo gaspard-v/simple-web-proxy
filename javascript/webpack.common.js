@@ -2,7 +2,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    mode: "development",
     entry: "./src/index.js",
     output: {
         filename: "bundle.js",
@@ -29,8 +28,4 @@ module.exports = {
             template: "./index.html",
         }),
     ],
-    devtool: "eval-source-map",
-    devServer: {
-        static: "./dist",
-    },
 };
