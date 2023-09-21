@@ -9,7 +9,6 @@ const mutationChild = (mutation) => {
             if (addedNode.href != change_link(addedNode.href))
                 addedNode.href = change_link(addedNode.href);
         }
-        console.log(addedNode);
     });
 };
 

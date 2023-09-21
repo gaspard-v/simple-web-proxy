@@ -20,6 +20,10 @@
     imageElement.alt = "alt";
     imageElement.id = "created-img";
     document.body.appendChild(imageElement);
+    if (window.fetch) {
+        window.fetch("https://www.xosh.fr/fetch1.png").then(console.log("done"));
+        window.fetch(new Request("/test.jpg")).then(console.log("done2"));
+    }
 </script>
 
 </html>

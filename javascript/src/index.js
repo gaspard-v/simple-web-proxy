@@ -1,5 +1,6 @@
 import observer from "./detect_changes";
 import change_cookies from "./change_cookies";
+import inject from "./inject_fetch";
 
 observer.observe(document, {
     childList: true,
@@ -8,3 +9,4 @@ observer.observe(document, {
 });
 
 change_cookies();
+inject();
