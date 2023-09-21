@@ -31,6 +31,7 @@ def __transform_cookies(cookies: str):
         cookies_ret[key]["path"] = cookie["path"]
         cookies_ret[key]["httponly"] = cookie["httponly"]
         cookies_ret[key]["secure"] = cookie["secure"]
+        cookies_ret[key]["samesite"] = cookie["samesite"]
     return cookies_ret.output()
 
 
