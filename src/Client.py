@@ -16,6 +16,11 @@ def __transform_query(
         cookies.pop("web_proxy_requested_website", None)
 
 
+def __transform_cookies(cookies: str):
+    lol = cookies
+    return
+
+
 def __transform_response(headers: dict = None) -> None:
     keys = ["Content-Type"]
     header_normalized = {key.lower(): value for key, value in headers.items()}
@@ -25,8 +30,12 @@ def __transform_response(headers: dict = None) -> None:
         key = keys[i]
         key_normalized = keys_normalized[i]
         value = header_normalized.get(key_normalized, None)
-        if value:
-            r_headers[key] = value
+        if not value:
+            continue
+        if "cookie" in value:
+            __transform_cookies(headers[key])
+        r_headers[key] = value
+
     headers.clear()
     headers.update(r_headers)
 

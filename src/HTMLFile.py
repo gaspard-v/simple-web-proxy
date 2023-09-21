@@ -3,7 +3,7 @@ from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 import os
 
 
-def __find_all_absolute_link(soup: BeautifulSoup):
+def __find_all_link(soup: BeautifulSoup):
     elements = soup.find_all(True, href=True)
     elements += soup.find_all(True, src=True)
     return elements
@@ -19,6 +19,8 @@ def __parse_link(link):
     if server_port and not_standard_port:
         server_netloc += f":{server_port}"
     parsed_link = urlparse(link)
+    if parsed_link.scheme == "data":
+        return link
     if parsed_link.scheme and parsed_link.netloc:
         netloc = parsed_link.netloc
         schema = parsed_link.scheme
@@ -77,7 +79,7 @@ def parse(website: str, html: str):
     global __website
     __website = website
     soup = BeautifulSoup(html, "html5lib")
-    elements = __find_all_absolute_link(soup)
+    elements = __find_all_link(soup)
     __change_links(elements)
     __add_js(soup)
     return soup.prettify()

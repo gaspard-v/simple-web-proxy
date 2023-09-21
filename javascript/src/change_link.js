@@ -24,9 +24,9 @@ const change_link = (link) => {
     try {
         const url = new URL(link);
         const base_url = new URL(window.location.href);
+        if (url.protocol === "data:") return link;
         const origin = url.origin;
         const params = url.searchParams;
-        const lol = params.get("web_proxy_requested_website");
         if (params.get("web_proxy_requested_website")) return link;
         let new_origin = origin;
         if (origin == base_url.origin) {
