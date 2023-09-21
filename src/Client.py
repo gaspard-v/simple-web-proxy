@@ -1,6 +1,9 @@
 from flask import Response, request, escape
 from . import HTMLFile
 import requests
+import http.cookies
+import os
+from urllib.parse import urlparse
 
 
 def __transform_query(
@@ -17,8 +20,18 @@ def __transform_query(
 
 
 def __transform_cookies(cookies: str):
-    lol = cookies
-    return
+    cookies_obj = http.cookies.SimpleCookie(cookies)
+    cookies_ret = http.cookies.SimpleCookie()
+    domaine = urlparse(__website).netloc
+    for cookie in cookies_obj.values():
+        key = f"{domaine}_{cookie.key}"
+        cookies_ret[key] = cookie.value
+        cookies_ret[key]["domain"] = os.environ.get("WEB_PROXY_NETLOC")
+        cookies_ret[key]["expires"] = cookie["expires"]
+        cookies_ret[key]["path"] = cookie["path"]
+        cookies_ret[key]["httponly"] = cookie["httponly"]
+        cookies_ret[key]["secure"] = cookie["secure"]
+    return cookies_ret.output()
 
 
 def __transform_response(headers: dict = None) -> None:
@@ -32,9 +45,10 @@ def __transform_response(headers: dict = None) -> None:
         value = header_normalized.get(key_normalized, None)
         if not value:
             continue
-        if "cookie" in value:
-            __transform_cookies(headers[key])
         r_headers[key] = value
+    if header_normalized.get("set-cookie", None):
+        lol = __transform_cookies(header_normalized["set-cookie"])
+        # TODO: add cookies to client response
 
     headers.clear()
     headers.update(r_headers)
