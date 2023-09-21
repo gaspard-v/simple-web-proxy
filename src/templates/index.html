@@ -48,17 +48,14 @@
         const validationMessage = document.getElementById('validation-message');
 
         urlForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Empêcher la soumission du formulaire
+            event.preventDefault();
 
             const urlInput = document.getElementById('url-input');
             const urlValue = urlInput.value;
 
-            // Vérifier si l'URL est valide
 
-            // Créer un cookie
             document.cookie = `web_proxy_requested_website=${(urlValue)}; path=/`;
 
-            // Recharger la page
             location.reload();
 
         });

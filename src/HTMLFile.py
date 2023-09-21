@@ -12,7 +12,10 @@ def __find_all_absolute_link(soup: BeautifulSoup):
 def __parse_link(link):
     server_port = os.environ.get("WEB_PROXY_PORT")
     server_netloc = os.environ.get("WEB_PROXY_NETLOC")
-    if server_port:
+    not_standard_port = ("http" in server_netloc and server_port != "80") or (
+        "https" in server_netloc and server_netloc != "443"
+    )
+    if server_port and not_standard_port:
         server_netloc += f":{server_port}"
     server_schema = os.environ.get("WEB_PROXY_SCHEMA")
     parsed_link = urlparse(link)

@@ -6,12 +6,20 @@
 </head>
 
 <body>
-    <p>This is an absolute <a id="absolute-link" href="https://www.google.com/search?q=recherche">link</a></p>
-    <p>This is a relative <a id="relative-link" href="/nothing">link</a></p>
+    <p>absolute <a id="absolute-link" href="https://www.google.com/search?q=search">link</a></p>
+    <p>relative <a id="relative-link" href="/nothing">link</a></p>
+    <p>changing <a id="changing-link" href="/test">link</a></p>
+
+    <img src="http://xosh.fr/test"></img>
 </body>
 <script>
-    var relativeLink = document.getElementById("relative-link");
-    relativeLink.href = "nouvelle-valeur-de-lien";
+    var relativeLink = document.getElementById("changing-link");
+    relativeLink.href = "/new_value?param=test";
+    var imageElement = document.createElement("img");
+    imageElement.src = "https://www.exemple.com/image.jpg";
+    imageElement.alt = "alt";
+    imageElement.id = "created-img";
+    document.body.appendChild(imageElement);
 </script>
 
 </html>
