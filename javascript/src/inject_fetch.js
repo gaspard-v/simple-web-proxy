@@ -3,7 +3,6 @@ import change_link from "./change_link";
 const inject_fetch = () => {
     const orignal_fetch = window.fetch;
     window.fetch = function (input, ...args) {
-        console.log(input);
         if (typeof input == "string") {
             input = change_link(input);
         } else {
