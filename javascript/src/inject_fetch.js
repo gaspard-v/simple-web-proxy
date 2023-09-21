@@ -2,7 +2,7 @@ import change_link from "./change_link";
 
 const inject_fetch = () => {
     const orignal_fetch = window.fetch;
-    window.fetch = (input, init = undefined) => {
+    window.fetch = function (input, ...args) {
         console.log(input);
         if (typeof input == "string") {
             input = change_link(input);
@@ -23,31 +23,19 @@ const inject_fetch = () => {
                 signal: originalRequest.signal,
             });
         }
-        return orignal_fetch.apply(this, [input, init]);
+        return orignal_fetch.apply(this, [input, ...args]);
     };
 };
 
 const inject_xhr = () => {
-    const original_xhr_open = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = (
-        method,
-        url,
-        async = true,
-        user = null,
-        password = null,
-    ) => {
+    const original_xhr_open = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function (method, url, ...args) {
         if (typeof url == "string") {
             url = change_link(url);
         } else {
             url = change_link(url.toString());
         }
-        return original_xhr_open.apply(this, [
-            method,
-            url,
-            async,
-            user,
-            password,
-        ]);
+        return original_xhr_open.apply(this, [method, url, ...args]);
     };
 };
 

@@ -22,8 +22,25 @@
     document.body.appendChild(imageElement);
     if (window.fetch) {
         window.fetch("https://www.xosh.fr/fetch1.png").then(console.log("done"));
-        window.fetch(new Request("/test.jpg")).then(console.log("done2"));
+        window.fetch(new Request("/fetch2.jpg")).then(console.log("done2"));
     }
+    var xhr = new XMLHttpRequest();
+
+    var url = "https://www.xosh.fr/xhr.png";
+    xhr.open("GET", url, true);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var responseData = xhr.responseText;
+            console.log("Réponse du serveur : ", responseData);
+        } else {
+            console.error("Erreur de requête. Statut : ", xhr.status);
+        }
+    };
+    xhr.onerror = function () {
+        console.error("Erreur réseau lors de la requête.");
+    };
+    xhr.send();
 </script>
 
 </html>
