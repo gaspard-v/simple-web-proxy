@@ -10,14 +10,14 @@ def __find_all_absolute_link(soup: BeautifulSoup):
 
 
 def __parse_link(link):
+    server_schema = os.environ.get("WEB_PROXY_SCHEMA")
     server_port = os.environ.get("WEB_PROXY_PORT")
     server_netloc = os.environ.get("WEB_PROXY_NETLOC")
-    not_standard_port = ("http" in server_netloc and server_port != "80") or (
-        "https" in server_netloc and server_netloc != "443"
+    not_standard_port = ("http" in server_schema and server_port != "80") or (
+        "https" in server_schema and server_port != "443"
     )
     if server_port and not_standard_port:
         server_netloc += f":{server_port}"
-    server_schema = os.environ.get("WEB_PROXY_SCHEMA")
     parsed_link = urlparse(link)
     if parsed_link.scheme and parsed_link.netloc:
         netloc = parsed_link.netloc
@@ -58,14 +58,19 @@ def __change_links(elements):
 
 
 def __add_js(soup: BeautifulSoup):
-    script_changes = soup.new_tag("script")
-    script_cookie = soup.new_tag("script")
-    with open(os.path.join(os.path.dirname(__file__), "js", "detect_changes.js")) as js:
-        script_changes.string = js.read()
-    with open(os.path.join(os.path.dirname(__file__), "js", "change_cookie.js")) as js:
-        script_cookie.string = js.read()
-    soup.head.append(script_changes)
-    soup.head.append(script_cookie)
+    script = soup.new_tag("script")
+    with open(
+        os.path.join(
+            os.path.dirname(__file__), "..", "javascript", "dist", "bundle.js"
+        ),
+        encoding="utf-8",
+    ) as js:
+        script.string = js.read()
+    first_script = soup.head.find("script")
+    if first_script:
+        first_script.insert_before(script)
+    else:
+        soup.head.append(script)
 
 
 def parse(website: str, html: str):
