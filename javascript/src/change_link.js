@@ -1,24 +1,9 @@
 import get_parameter_by_name from "./get_parameter";
+import get_cookie from "./get_cookie";
 const absolute_to_relatif = (link) => {
     if (!link.startsWith(window.location.href)) return link;
     return link.slice(window.location.href.length);
 };
-
-function get_cookie(cookieName) {
-    const name = cookieName + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookieArray = decodedCookie.split(";");
-    for (let i = 0; i < cookieArray.length; i++) {
-        let cookie = cookieArray[i];
-        while (cookie.charAt(0) === " ") {
-            cookie = cookie.substring(1);
-        }
-        if (cookie.indexOf(name) === 0) {
-            return cookie.substring(name.length, cookie.length);
-        }
-    }
-    return "";
-}
 
 const change_link = (link) => {
     try {

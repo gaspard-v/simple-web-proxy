@@ -1,4 +1,5 @@
 import get_parameter_by_name from "./get_parameter";
+import get_requested_website from "./get_requested_website";
 
 const check_domain = (full_domaine, partial_domain) =>
     full_domaine.toLowerCase().endsWith(partial_domain.toLowerCase());
@@ -16,9 +17,7 @@ const remove_domain_prefix = () => {
         if (parties.length !== 3) continue;
         const prefix = parties[0];
         const cookie_real_name = parties[1];
-        const base_url = new URL(window.location.href);
-        const host = base_url.host;
-        if (!check_domain(host, prefix)) continue;
+        if (!check_domain(get_requested_website(), prefix)) continue;
         document.cookie = `${cookie_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; SameSite=None`; // delete cookie
         document.cookie = `${cookie_real_name}=${cookie_value}; path=/; Secure; SameSite=None`;
         window.activeCookies.push([
