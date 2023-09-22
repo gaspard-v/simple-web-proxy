@@ -6,6 +6,10 @@ import os
 from urllib.parse import urlparse
 
 
+def __check_domain(full_domain, partial_domain):
+    return full_domain.lower().endswith(partial_domain.lower())
+
+
 def __transform_client_cookies(cookies):
     domaine = urlparse(__website).netloc
     r_cookies = {}
@@ -14,11 +18,9 @@ def __transform_client_cookies(cookies):
         new_key = key
         parties = key.split("_", 1)
         if len(parties) < 2:
-            r_cookies[key] = value
             continue
         [cookie_domaine, new_key] = parties
-        if not domaine in cookie_domaine:
-            r_cookies[key] = value
+        if not __check_domain(domaine, cookie_domaine):
             continue
         r_cookies[new_key] = value
     return r_cookies
@@ -43,16 +45,21 @@ def __transform_query(
 def __transform_cookies(cookies: str):
     cookies_obj = http.cookies.SimpleCookie(cookies)
     cookies_ret = http.cookies.SimpleCookie()
-    domaine = urlparse(__website).netloc
+    netloc = urlparse(__website).netloc
     for cookie in cookies_obj.values():
+        cookie_domain = cookie["domain"]
+        cookie_domain = cookie_domain.replace(",", "")
+        domaine = cookie_domain if cookie_domain else netloc
+        parties = cookie.key.split("_", 1)
+        if len(parties) > 1:
+            if __check_domain(netloc, parties[0]):
+                continue
         key = f"{domaine}_{cookie.key}"
         cookies_ret[key] = cookie.value
-        cookies_ret[key]["domain"] = os.environ.get("WEB_PROXY_NETLOC")
-        cookies_ret[key]["expires"] = cookie["expires"]
         cookies_ret[key]["path"] = cookie["path"]
-        cookies_ret[key]["httponly"] = cookie["httponly"]
-        cookies_ret[key]["secure"] = cookie["secure"]
-        cookies_ret[key]["samesite"] = cookie["samesite"]
+        cookies_ret[key]["httponly"] = False
+        cookies_ret[key]["secure"] = True
+        cookies_ret[key]["samesite"] = "None"
     return cookies_ret
 
 
