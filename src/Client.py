@@ -18,6 +18,7 @@ def __transform_client_cookies(cookies):
         new_key = key
         parties = key.split("_", 1)
         if len(parties) < 2:
+            r_cookies[key] = value  # send cookie that does not have a domain prefix
             continue
         [cookie_domaine, new_key] = parties
         if not __check_domain(domaine, cookie_domaine):
