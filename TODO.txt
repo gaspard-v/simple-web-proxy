@@ -1,0 +1,11 @@
+changer les cookies sur la page web actif :
+    Pour le domaine actif www.exemple.com, changer
+    les cookies www.exemple.com_moncookie en moncookie
+Lorsque l'utilisateur se deconnecter
+    répéré l'evenemnt grace à beforeunload ou unload
+    remettre les cookies tel que moncookie devient
+    www.exemple.com_moncookie
+
+alternatif: utiliser une bdd sur le serveur, enregistrer
+un cookie id, et le serveur s'occupe de lui fournir les cookie
+dont il a besoin, au moment ou il en a besoin
