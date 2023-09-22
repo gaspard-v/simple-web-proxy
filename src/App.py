@@ -3,11 +3,9 @@ from . import Client
 
 
 def main(path: str) -> str:
-    path = request.path
     parameters = request.args
     cookies = request.cookies
     requested_website = ""
-    body = request.get_data()
     requested_website_param = parameters.get("web_proxy_requested_website")
     requested_website_cookie = cookies.get("web_proxy_requested_website")
 

@@ -21,9 +21,11 @@ def __parse_link(link):
     parsed_link = urlparse(link)
     if parsed_link.scheme == "data":
         return link
-    if parsed_link.scheme and parsed_link.netloc:
+    if parsed_link.netloc:
         netloc = parsed_link.netloc
         schema = parsed_link.scheme
+        if not schema:
+            schema = urlparse(__website).scheme
         new_params = f"web_proxy_requested_website={schema}://{netloc}"
     else:
         new_params = f"web_proxy_requested_website={__website}"

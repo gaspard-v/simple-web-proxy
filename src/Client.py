@@ -6,6 +6,24 @@ import os
 from urllib.parse import urlparse
 
 
+def __transform_client_cookies(cookies):
+    domaine = urlparse(__website).netloc
+    r_cookies = {}
+    for key in cookies:
+        value = cookies[key]
+        new_key = key
+        parties = key.split("_", 1)
+        if len(parties) < 2:
+            r_cookies[key] = value
+            continue
+        [cookie_domaine, new_key] = parties
+        if not domaine in cookie_domaine:
+            r_cookies[key] = value
+            continue
+        r_cookies[new_key] = value
+    return r_cookies
+
+
 def __transform_query(
     parameters: dict = {}, headers: dict = {}, cookies: dict = {}
 ) -> None:
@@ -17,6 +35,9 @@ def __transform_query(
         headers.pop("Accept-Encoding", None)
     if cookies:
         cookies.pop("web_proxy_requested_website", None)
+        new_cookies = __transform_client_cookies(cookies)
+        cookies.clear()
+        cookies.update(new_cookies)
 
 
 def __transform_cookies(cookies: str):
@@ -32,10 +53,10 @@ def __transform_cookies(cookies: str):
         cookies_ret[key]["httponly"] = cookie["httponly"]
         cookies_ret[key]["secure"] = cookie["secure"]
         cookies_ret[key]["samesite"] = cookie["samesite"]
-    return cookies_ret.output()
+    return cookies_ret
 
 
-def __transform_response(headers: dict = None) -> None:
+def __transform_response(headers: dict = {}) -> http.cookies.SimpleCookie | None:
     keys = ["Content-Type"]
     header_normalized = {key.lower(): value for key, value in headers.items()}
     keys_normalized = [key.lower() for key in keys]
@@ -47,12 +68,10 @@ def __transform_response(headers: dict = None) -> None:
         if not value:
             continue
         r_headers[key] = value
-    if header_normalized.get("set-cookie", None):
-        lol = __transform_cookies(header_normalized["set-cookie"])
-        # TODO: add cookies to client response
-
     headers.clear()
     headers.update(r_headers)
+    if header_normalized.get("set-cookie", None):
+        return __transform_cookies(header_normalized["set-cookie"])
 
 
 def __handler_html_css(html_css_file: bytes):
@@ -74,13 +93,17 @@ def __handler_stream(response: requests.Response, headers: dict):
 
 def __handle_response(response: requests.Response) -> Response:
     r_headers = dict(response.headers)
-    __transform_response(headers=r_headers)
+    cookies = __transform_response(headers=r_headers)
     r_status = response.status_code
-    return Response(
+    response = Response(
         response=__handler_stream(response, r_headers),
         status=r_status,
         headers=r_headers,
     )
+    if cookies:
+        for cookie in cookies.values():
+            response.headers.add("Set-Cookie", cookie.OutputString())
+    return response
 
 
 def simple_request(website):
@@ -109,7 +132,6 @@ def simple_request(website):
             cookies=cookies,
             headers=headers,
             data=request.get_data(),  # TODO check why only get_data() works
-            verify=False,
         )
     except Exception as err:
         response = f"<p>{escape(err)}</p>"  # TODO use templates
