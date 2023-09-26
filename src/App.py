@@ -14,8 +14,8 @@ def main(path: str) -> str:
     if not requested_website:
         return render_template("index.html")
     requested_website = requested_website[:-1]
-    port = parameters["web_proxy_port"]
-    method = parameters["web_proxy_method"]
+    port = parameters.get("web_proxy_port", None)
+    method = parameters.get("web_proxy_method", None)
     if port:
         requested_website = f"{requested_website}:{port}"
     if method:

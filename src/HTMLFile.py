@@ -35,7 +35,7 @@ def __parse_link(link):
         query_params.update(parse_qs(f"web_proxy_method={schema}"))
     if port:
         query_params.update(parse_qs(f"web_proxy_port={port}"))
-    server_netloc = netloc
+    server_netloc = f"{netloc}.{server_netloc}"
 
     new_query = urlencode(query_params, doseq=True)
     new_link = urlunparse(
