@@ -21,16 +21,22 @@ def __parse_link(link):
     parsed_link = urlparse(link)
     if parsed_link.scheme == "data":
         return link
+    query_params = parse_qs(parsed_link.query)
     if parsed_link.netloc:
         netloc = parsed_link.netloc
         schema = parsed_link.scheme
-        if not schema:
-            schema = urlparse(__website).scheme
-        new_params = f"web_proxy_requested_website={schema}://{netloc}"
+        port = parsed_link.port
     else:
-        new_params = f"web_proxy_requested_website={__website}"
-    query_params = parse_qs(parsed_link.query)
-    query_params.update(parse_qs(new_params))
+        website_url = urlparse(__website)
+        netloc = website_url.netloc
+        schema = website_url.scheme
+        port = website_url.port
+    if schema:
+        query_params.update(parse_qs(f"web_proxy_method={schema}"))
+    if port:
+        query_params.update(parse_qs(f"web_proxy_port={port}"))
+    server_netloc = netloc
+
     new_query = urlencode(query_params, doseq=True)
     new_link = urlunparse(
         (
