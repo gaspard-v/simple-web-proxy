@@ -43,8 +43,5 @@ const add_domain_prefix = () => {
 const change_cookies = () => {
     // remove_domain_prefix();
     // add_domain_prefix();
-    const parameter = get_parameter_by_name("web_proxy_requested_website");
-    if (parameter)
-        document.cookie = `web_proxy_requested_website=${parameter}; path=/`;
 };
 export default change_cookies;

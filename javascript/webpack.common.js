@@ -1,4 +1,5 @@
 const path = require("path");
+const DotenvWebpackPlugin = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -29,5 +30,6 @@ module.exports = {
             scriptLoading: "blocking",
             inject: "head",
         }),
+        new DotenvWebpackPlugin({ path: "../.env" }),
     ],
 };
