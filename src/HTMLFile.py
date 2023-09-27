@@ -21,6 +21,8 @@ def __parse_link(link):
     parsed_link = urlparse(link)
     if parsed_link.scheme == "data":
         return link
+    if server_netloc in parsed_link.netloc:
+        return link
     query_params = parse_qs(parsed_link.query)
     if parsed_link.netloc:
         netloc = parsed_link.netloc

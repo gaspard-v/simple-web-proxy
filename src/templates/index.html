@@ -35,7 +35,7 @@
 
 <body>
     <div id="container">
-        <h1>Vérification d'URL</h1>
+        <h1>Type an URL</h1>
         <form id="url-form">
             <input type="url" id="url-input" name="url" placeholder="URL" required>
             <button type="submit" id="validate-button">Valider</button>
@@ -44,20 +44,20 @@
     </div>
 
     <script>
-        const urlForm = document.getElementById('url-form');
-        const validationMessage = document.getElementById('validation-message');
-
-        urlForm.addEventListener('submit', function (event) {
+        var urlForm = document.getElementById("url-form");
+        urlForm.addEventListener("submit", function (event) {
             event.preventDefault();
-
-            const urlInput = document.getElementById('url-input');
-            const urlValue = urlInput.value;
-
-
-            document.cookie = `web_proxy_requested_website=${(urlValue)}; path=/`;
-
-            location.reload();
-
+            var urlInput = document.getElementById("url-input");
+            var urlValue = urlInput.value;
+            var urlObj = new URL(urlValue);
+            var currentUrl = new URL(window.location.href);
+            var newHost = "".concat(urlObj.hostname, ".").concat(currentUrl.host);
+            urlObj.searchParams.append("web_proxy_method", urlObj.protocol.slice(0, -1));
+            var port = urlObj.port;
+            if (port) urlObj.searchParams.append("web_proxy_port", port);
+            urlObj.host = newHost;
+            urlObj.protocol = currentUrl.protocol;
+            window.location.href = urlObj.href;
         });
     </script>
 </body>
