@@ -1,5 +1,5 @@
 import observer from "./detect_changes";
-import change_cookies from "./change_cookies";
+import patch_cookies from "./patch_cookies";
 import inject from "./inject_fetch";
 
 observer.observe(document, {
@@ -8,5 +8,5 @@ observer.observe(document, {
     attributes: true,
 });
 
-// change_cookies();
+patch_cookies();
 inject();

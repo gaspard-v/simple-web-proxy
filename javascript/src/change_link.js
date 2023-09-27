@@ -1,5 +1,4 @@
 import get_parameter_by_name from "./get_parameter";
-import get_cookie from "./get_cookie";
 const absolute_to_relatif = (link) => {
     if (!link.startsWith(window.location.href)) return link;
     return link.slice(window.location.href.length);
