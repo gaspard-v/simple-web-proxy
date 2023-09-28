@@ -2,6 +2,7 @@ from flask import request, render_template
 from . import Client
 import os
 from urllib.parse import urlparse
+import base62
 
 
 def main(path: str) -> str:
@@ -14,6 +15,7 @@ def main(path: str) -> str:
     if not requested_website:
         return render_template("index.html")
     requested_website = requested_website[:-1]
+    requested_website = base62.decodebytes(requested_website).decode()
     port = parameters.get("web_proxy_port", None)
     method = parameters.get("web_proxy_method", None)
     if port:

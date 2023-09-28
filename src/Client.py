@@ -21,11 +21,6 @@ def __transform_response_cookies(cookies: str):
     cookies_ret = http.cookies.SimpleCookie()
     for cookie in cookies_obj.values():
         key = cookie.key
-        cookie_domain = cookie["domain"]
-        cookies_ret[key] = cookie.value
-        if cookie_domain:
-            cookie_domain = f"{cookie_domain}.{os.environ.get('WEB_PROXY_NETLOC')}"
-            cookies_ret[key]["domain"] = cookie_domain
         cookies_ret[key]["path"] = cookie["path"]
         cookies_ret[key]["httponly"] = cookie["httponly"]
         cookies_ret[key]["secure"] = cookie["secure"]
