@@ -45,7 +45,7 @@ def encode(
     *,
     alphabet: str = "0123456789abcdefghijklmnopqrstuvwxyz",
     encoding: str = "utf-8"
-):
+) -> str:
     if type(element) is str:
         element = __str_to_int(element, encoding=encoding)
     elif type(element) is bytes:
@@ -60,7 +60,7 @@ def decode(
     *,
     alphabet: str = "0123456789abcdefghijklmnopqrstuvwxyz",
     encoding: str = "utf-8"
-):
+) -> str:
     number = __number_decode(element, len(alphabet))
     return __int_to_str(number, encoding=encoding)
 
