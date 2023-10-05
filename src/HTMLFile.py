@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 import os
-import base62
 
 
 def __find_all_link(soup: BeautifulSoup):
@@ -32,7 +31,6 @@ def __parse_link(link):
     else:
         website_url = urlparse(__website)
         netloc = website_url.netloc
-        netloc = base62.encode(netloc)
         schema = website_url.scheme
         port = website_url.port
     if schema:

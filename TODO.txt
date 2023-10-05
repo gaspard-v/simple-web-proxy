@@ -1,3 +1,1 @@
-Enlever le base62 pour le remplacer par du base36 !
-
-Vérifier si base36.js fonction
+change les url par du base36
