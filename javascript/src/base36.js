@@ -29,8 +29,8 @@ function intToStr(number, encoding = "utf-8") {
         const byteArray = [];
 
         while (bigIntValue > 0n) {
-            const byte = bigIntValue & 0xffn;
-            // byteArray.unshift(Number(byte)); // Utiliser unshift pour ajouter les octets dans l'ordre correct
+            const byte = BigInt(bigIntValue) & BigInt(0xff);
+            byteArray.unshift(Number(byte)); // Utiliser unshift pour ajouter les octets dans l'ordre correct
             bigIntValue >>= 8n; // Décaler de 8 bits vers la droite pour traiter le prochain octet
         }
 
