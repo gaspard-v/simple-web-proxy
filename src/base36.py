@@ -71,6 +71,3 @@ def __test():
     print(foo)
     bar = decode(foo)
     print(bar)
-
-
-__test()
