@@ -1,1 +1,3 @@
 change les url par du base36
+
+regler le problème du fichier .env

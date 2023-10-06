@@ -13,3 +13,4 @@ services:
     volumes:
       - ./access.log:/var/log/gunicorn/access.log:rw
       - ./error.log:/var/log/gunicorn/error.log:rw
+      - ./.env:/app/.env:ro
