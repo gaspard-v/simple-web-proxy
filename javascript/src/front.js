@@ -1,5 +1,5 @@
 "use strict";
-import { encode } from "./base36";
+import { encode } from "@abcnews/base-36-text";
 
 const urlForm = document.getElementById("url-form");
 urlForm.addEventListener("submit", function (event) {
