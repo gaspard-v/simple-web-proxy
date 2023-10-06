@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 import os
+from . import Base36
 
 
 def __find_all_link(soup: BeautifulSoup):
@@ -37,6 +38,7 @@ def __parse_link(link):
         query_params.update(parse_qs(f"web_proxy_method={schema}"))
     if port:
         query_params.update(parse_qs(f"web_proxy_port={port}"))
+    netloc = Base36.encode(netloc)
     server_netloc = f"{netloc}.{server_netloc}"
 
     new_query = urlencode(query_params, doseq=True)
@@ -73,7 +75,7 @@ def __add_js(soup: BeautifulSoup):
     script = soup.new_tag("script")
     with open(
         os.path.join(
-            os.path.dirname(__file__), "..", "javascript", "dist", "bundle.js"
+            os.path.dirname(__file__), "..", "javascript", "dist", "main.bundle.js"
         ),
         encoding="utf-8",
     ) as js:
@@ -91,5 +93,5 @@ def parse(website: str, html: str):
     soup = BeautifulSoup(html, "html5lib")
     elements = __find_all_link(soup)
     __change_links(elements)
-    # __add_js(soup)
+    __add_js(soup)
     return soup.prettify()

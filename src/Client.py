@@ -2,8 +2,6 @@ from flask import Response, request, escape
 from . import HTMLFile
 import requests
 import http.cookies
-import os
-from urllib.parse import urlparse
 
 
 def __transform_client_query(parameters: dict = {}, headers: dict = {}) -> None:
@@ -21,6 +19,7 @@ def __transform_response_cookies(cookies: str):
     cookies_ret = http.cookies.SimpleCookie()
     for cookie in cookies_obj.values():
         key = cookie.key
+        cookies_ret[key] = cookie.value
         cookies_ret[key]["path"] = cookie["path"]
         cookies_ret[key]["httponly"] = cookie["httponly"]
         cookies_ret[key]["secure"] = cookie["secure"]
