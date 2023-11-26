@@ -24,8 +24,9 @@ def __change_links(css_obj):
 def parse(website: str, css: str | bytes):
     global __website
     __website = website
+    return css  # parsing css is very slow ! MUST FIX
     try:
-        css_obj = cssutils.parseString(css)
+        css_obj = cssutils.parseString(css, validate=False)
         return __change_links(css_obj)
     except:
         return css
