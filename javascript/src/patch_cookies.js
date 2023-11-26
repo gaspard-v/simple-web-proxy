@@ -41,8 +41,7 @@ const serialize_cookie = (cookie_obj) => {
 const change_cookie = (cookie_string) => {
     const cookie_obj = parse_cookie(cookie_string);
     const cookie_domain = cookie_obj.domain;
-    if (cookie_domain)
-        cookie_obj.domain = `${cookie_domain}.${process.env.WEB_PROXY_NETLOC}`;
+    if (cookie_domain) delete cookie_obj.domain;
     return serialize_cookie(cookie_obj);
 };
 const patch_cookie = () => {

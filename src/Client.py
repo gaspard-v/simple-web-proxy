@@ -1,9 +1,8 @@
 from flask import Response, request, escape
 from . import HTMLFile
+from . import CSSFile
 import requests
 import http.cookies
-import os
-from urllib.parse import urlparse
 
 
 def __transform_client_query(parameters: dict = {}, headers: dict = {}) -> None:
@@ -21,11 +20,7 @@ def __transform_response_cookies(cookies: str):
     cookies_ret = http.cookies.SimpleCookie()
     for cookie in cookies_obj.values():
         key = cookie.key
-        cookie_domain = cookie["domain"]
         cookies_ret[key] = cookie.value
-        if cookie_domain:
-            cookie_domain = f"{cookie_domain}.{os.environ.get('WEB_PROXY_NETLOC')}"
-            cookies_ret[key]["domain"] = cookie_domain
         cookies_ret[key]["path"] = cookie["path"]
         cookies_ret[key]["httponly"] = cookie["httponly"]
         cookies_ret[key]["secure"] = cookie["secure"]
@@ -51,21 +46,23 @@ def __transform_response(headers: dict = {}) -> http.cookies.SimpleCookie | None
         return __transform_response_cookies(header_normalized["set-cookie"])
 
 
-def __handle_html_css(html_css_file: bytes):
-    return HTMLFile.parse(__website, html_css_file)
-
-
 def __handle_response_stream(response: requests.Response, headers: dict):
-    html_css_file = b""
+    html_file = b""
+    css_file = b""
     for chunk in response.iter_content(chunk_size=8192):
         if not chunk:
             continue
         if "text/html" in headers.get("Content-Type", None):
-            html_css_file += chunk
+            html_file += chunk
+            continue
+        if "text/css" in headers.get("Content-Type", None):
+            css_file += chunk
             continue
         yield chunk
-    if html_css_file:
-        yield __handle_html_css(html_css_file)
+    if html_file:
+        yield HTMLFile.parse(__website, html_file)
+    if css_file:
+        yield CSSFile.parse(__website, css_file)
 
 
 def __handle_response(response: requests.Response) -> Response:

@@ -1,4 +1,5 @@
 import get_parameter_by_name from "./get_parameter";
+import { encode } from "@abcnews/base-36-text";
 const absolute_to_relatif = (link) => {
     if (!link.startsWith(window.location.href)) return link;
     return link.slice(window.location.href.length);
@@ -31,7 +32,8 @@ const change_link = (link) => {
             if (port) params.append("web_proxy_port", port);
         }
         url.search = params;
-        url.host = `${url.hostname}.${process.env.WEB_PROXY_NETLOC}`;
+        const urlBase32HostName = encode(url.hostname);
+        url.host = `${urlBase32HostName}.${process.env.WEB_PROXY_NETLOC}`;
         if (process.env.WEB_PROXY_PORT) url.host += `:${base_url.port}`;
         url.protocol = base_url.protocol;
         return url.href;
