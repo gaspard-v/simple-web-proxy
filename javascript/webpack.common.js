@@ -1,10 +1,11 @@
 const path = require("path");
+const DotenvWebpackPlugin = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: { main: "./src/index.js", front: "./src/front.js" },
     output: {
-        filename: "bundle.js",
+        filename: "[name].bundle.js",
         path: path.resolve(__dirname, "dist"),
         clean: true,
     },
@@ -26,7 +27,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./index.html",
-            scriptLoading: undefined,
+            scriptLoading: "blocking",
+            inject: "head",
         }),
+        new DotenvWebpackPlugin({ path: "../.env" }),
     ],
 };

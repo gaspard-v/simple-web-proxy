@@ -35,7 +35,7 @@
 
 <body>
     <div id="container">
-        <h1>Vérification d'URL</h1>
+        <h1>Type an URL</h1>
         <form id="url-form">
             <input type="url" id="url-input" name="url" placeholder="URL" required>
             <button type="submit" id="validate-button">Valider</button>
@@ -43,23 +43,7 @@
         <p id="validation-message"></p>
     </div>
 
-    <script>
-        const urlForm = document.getElementById('url-form');
-        const validationMessage = document.getElementById('validation-message');
-
-        urlForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const urlInput = document.getElementById('url-input');
-            const urlValue = urlInput.value;
-
-
-            document.cookie = `web_proxy_requested_website=${(urlValue)}; path=/`;
-
-            location.reload();
-
-        });
-    </script>
+    <script> {{ js_front_script | safe }} </script>
 </body>
 
 </html>

@@ -1,0 +1,13 @@
+.vscode/
+__pycache__/
+.venv/
+dist/
+node_modules/
+.env.example
+.gitignore
+.git/
+TODO.txt
+README.md
+LICENSE
+.env
+*.env

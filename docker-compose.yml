@@ -1,0 +1,16 @@
+version: '3'
+services:
+  simple-web-proxy:
+    build:
+      context: .
+    image: xosh/simple-web-proxy
+    env_file:
+      - .env
+    environment:
+      - GUNICORN_CMD_ARGS=--workers=$WEB_PROXY_WORKERS --bind=0.0.0.0:$WEB_PROXY_LISTEN_PORT --log-level $WEB_PROXY_LOG_LEVEL 
+    ports:
+      - $WEB_PROXY_LISTEN:$WEB_PROXY_LISTEN_PORT:$WEB_PROXY_LISTEN_PORT
+    volumes:
+      - ./access.log:/var/log/gunicorn/access.log:rw
+      - ./error.log:/var/log/gunicorn/error.log:rw
+      - ./.env:/app/.env:ro

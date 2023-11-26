@@ -41,6 +41,7 @@
         console.error("Erreur réseau lors de la requête.");
     };
     xhr.send();
+    document.cookie = "testCookie=value; SameSite=None; Secure;";
 </script>
 
 </html>

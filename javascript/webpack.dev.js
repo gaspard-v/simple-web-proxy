@@ -7,5 +7,8 @@ module.exports = merge(common, {
     devtool: "eval-source-map",
     devServer: {
         static: "./dist",
+        client: {
+            overlay: false, // cause bug if true!
+        },
     },
 });
